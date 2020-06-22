@@ -12,7 +12,7 @@ import useStyles from "./styles";
  */
 export default function UsersList(props) {
   // props
-  const { year, units, netRevenue, assets, liabilities, netProfit } = props;
+  const { users } = props;
 
   // styles
   const classes = useStyles();
@@ -24,9 +24,9 @@ export default function UsersList(props) {
 
 UsersList.propTypes = {
   /** Unidades a mostrar después de la cantidad (por defecto: M)*/
-  units: PropTypes.string,
+  users: PropTypes.object,
 };
 
 UsersList.defaultProps = {
-  units: "M"
+  users: {}
 };
