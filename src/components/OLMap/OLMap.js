@@ -30,7 +30,7 @@ class OLMap extends React.Component {
                 })
             ],
             view: new View({
-                projection: 'EPSG:4326',
+                projection: 'EPSG:3857',
                 center: this.state.center,
                 zoom: this.state.zoom
             }),
@@ -68,8 +68,8 @@ class OLMap extends React.Component {
             if (this.props.center[0] !== prevProps.center[0]) {
                 console.log(this.props.center);
                 this.setState( { center: this.props.center });
-                // this.olmap.getView().setCenter(this.props.center);
-                // this.olmap.getView().setZoom(this.state.zoom);
+                this.olmap.getView().setCenter(this.props.center);
+                this.olmap.getView().setZoom(this.state.zoom);
             }
         }
     }
