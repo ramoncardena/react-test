@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
@@ -11,12 +11,14 @@ import { personas } from "../../api"
 // components
 import Loading from "../Loading";
 import UsersList from "../UsersList";
+import EditUserModal from "../EditUserModal";
 
 // context
 import {
   useUserState,
   useUserDispatch,
-  setUsersRawList
+  setUsersRawList,
+  setSelectedUser
 } from "../../context/UserContext";
 
 function App() {
@@ -24,10 +26,11 @@ function App() {
   const classes = useStyles();
 
   // context
+  const [openEdit, setOpenEdit] = useState(false);
   const userState = useUserState();
   const userDispatch = useUserDispatch();
 
-  // effect
+  // effects
   useEffect(() => {
     personas
       .retrieve(50)
@@ -46,8 +49,9 @@ function App() {
       });
   }, [userDispatch]);
 
+
+  // methods
   const deleteUser = (user) => {
-    console.log(user);
     const updatedList = userState.usersRawList.filter(item =>
       item.login.uuid !== user.login.uuid
     )
@@ -56,12 +60,33 @@ function App() {
   }
 
   const editUser = (user) => {
-    console.log(user);
+    const updatedList = userState.usersRawList.filter(item =>
+      item.login.uuid === user.login.uuid
+    )
+    setSelectedUser(userDispatch, { selectedUser: updatedList[0] });
+    setOpenEdit(true);
   }
 
+  const handleEditModalClose = () => {
+    setSelectedUser(userDispatch, { selectedUser: null });
+    setOpenEdit(false);
+  }
+
+  
   return (
-    <div className={classes.root}>
+    <>
+      {/* USER EDIT MODAL */}
+      {userState.selectedUser !== null &&
+      <EditUserModal
+        open={openEdit}
+        onClose={() => handleEditModalClose()}
+        userUUID={userState.selectedUser.login.uuid}
+      />
+      } 
+      {/* MAIN GRID - 2 PANELS */}
       <Grid container spacing={0}>
+
+        {/* LEFT PANEL - USERS */}
         <Grid item xs={6}>
           <Paper className={classes.left} square>
             {userState.usersRawList !== null ?
@@ -75,13 +100,15 @@ function App() {
             }
           </Paper>
         </Grid>
+
+        {/* RIGHT PANEL - MAP */}
         <Grid item xs={6}>
           <Paper className={classes.right} square>
 
           </Paper>
         </Grid>
       </Grid>
-    </div>
+    </>
   );
 }
 

@@ -37,9 +37,9 @@ export default function UserCard(props) {
                     <Typography gutterBottom variant="h5" component="h2">
                         {userData.name.first + " " + userData.name.last}
                     </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
+                    {/* <Typography variant="body2" color="textSecondary" component="p">
                         {userData.email}
-                    </Typography>
+                    </Typography> */}
                     <Typography variant="body2" color="textSecondary" component="p">
                         {userData.phone}
                     </Typography>

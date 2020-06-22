@@ -8,13 +8,11 @@ import Themes from "./themes";
 import { UserProvider } from "./context/UserContext";
 
 ReactDOM.render(
-  <React.StrictMode>
     <UserProvider>
       <ThemeProvider theme={Themes.default}>
         <CssBaseline />
         <App />
       </ThemeProvider>
-    </UserProvider>
-  </React.StrictMode>,
+    </UserProvider>,
   document.getElementById('root')
 );
