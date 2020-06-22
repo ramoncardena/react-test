@@ -20,13 +20,19 @@ import useStyles from "./styles";
  */
 export default function UserCard(props) {
     // props
-    const { userData, onDeleteUser, onEditUser } = props;
+    const { userData, onDeleteUser, onEditUser, onMouseOver, onMouseOut, onCardClick } = props;
 
     // styles
     const classes = useStyles();
 
+
     return (
-        <Card className={classes.root}>
+        <Card
+            className={classes.root}
+            onMouseOver={() => onMouseOver(userData)}
+            onMouseOut={() => onMouseOut(userData)}
+            onClick={() => onCardClick(userData)}
+        >
             <CardActionArea>
                 <CardMedia
                     className={classes.media}
@@ -46,17 +52,17 @@ export default function UserCard(props) {
                 </CardContent>
             </CardActionArea>
             <CardActions className={classes.actions}>
-                <Button 
-                    variant="contained" 
-                    size="small" 
+                <Button
+                    variant="contained"
+                    size="small"
                     color="primary"
                     onClick={() => onEditUser(userData)}
                 >
                     Edit
                 </Button>
-                <Button 
-                    variant="contained" 
-                    size="small"  
+                <Button
+                    variant="contained"
+                    size="small"
                     onClick={() => onDeleteUser(userData)}
                 >
                     Delete
@@ -72,11 +78,20 @@ UserCard.propTypes = {
     /** Callback function for deleting user */
     onDeleteUser: PropTypes.func,
     /** Callback function for editing user */
-    onEditUser: PropTypes.func
+    onEditUser: PropTypes.func,
+    /** Callback function for mouse over card event */
+    onMouseOver: PropTypes.func,
+    /** Callback function for mouse out card event */
+    onMouseOut: PropTypes.func,
+    /** Callback function for mouse click card event */
+    onCardClick: PropTypes.func
 };
 
 UserCard.defaultProps = {
     userData: {},
-    onDeleteUser: () => {},
-    onEditUser: () => {}
+    onDeleteUser: () => { },
+    onEditUser: () => { },
+    onMouseOver: () => { },
+    onMouseOut: () => { },
+    onCardClick: () => { }
 };

@@ -1,16 +1,25 @@
 import React from 'react'
-import Grid from '@material-ui/core/Grid'
 import { Map, View } from 'ol';
 import { OSM as OSMSource } from 'ol/source'
-import { Vector as VectorLayer, Tile as TileLayer } from 'ol/layer'
-import { fromLonLat, toLonLat } from 'ol/proj';
+import { Tile as TileLayer } from 'ol/layer'
+import { fromLonLat } from 'ol/proj';
+import {
+    Attribution,
+    ScaleLine,
+    ZoomSlider,
+    Zoom,
+    Rotate,
+    MousePosition,
+    OverviewMap,
+    defaults as DefaultControls
+} from 'ol/control'
 import Overlay from 'ol/Overlay';
 
 class OLMap extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { center: [0, 0], zoom: 1 };
+        this.state = { center: this.props.center, zoom: 1 };
 
         this.olmap = new Map({
             target: null,
@@ -20,9 +29,13 @@ class OLMap extends React.Component {
                 })
             ],
             view: new View({
+                projection: 'EPSG:3857',
                 center: this.state.center,
                 zoom: this.state.zoom
-            })
+            }),
+            controls: DefaultControls().extend([
+                new OverviewMap()
+            ]),
         });
     }
 
@@ -42,40 +55,51 @@ class OLMap extends React.Component {
         });
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        let center = this.olmap.getView().getCenter();
-        let zoom = this.olmap.getView().getZoom();
-        if (center === nextState.center && zoom === nextState.zoom) return false;
-        return true;
-    }
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     let center = this.olmap.getView().getCenter();
+    //     let zoom = this.olmap.getView().getZoom();
+    //     if (center === nextState.center && zoom === nextState.zoom) return false;
+    //     return true;
+    // }
 
-    userAction() {
-        this.setState({ center: [546000, 6868000], zoom: 5 });
+    componentDidUpdate(prevProps) {
+        if (prevProps) {
+            if (this.props.center[0] !== prevProps.center[0]) {
+                console.log(this.props.center);
+                this.setState( { center: this.props.center, zoom: 2 });
+                this.olmap.getView().setCenter(this.props.center);
+                this.olmap.getView().setZoom(this.state.zoom);
+            }
+        }
     }
-
     render() {
         this.updateMap(); // Update map on render?
 
-        var pos = fromLonLat([16.3725, 48.208889]);
-        var marker = new Overlay({
-            position: pos,
-            positioning: 'center-center',
-            element: document.getElementById('marker'),
-            stopEvent: false
+        var markers = [];
+        var marker = null;
+        this.props.users.forEach(user => {
+
+            var element = document.createElement('div');
+            if (this.props.activeUser && user.login.uuid === this.props.activeUser.login.uuid) {
+                element.innerHTML = "<img src='http://maps.google.com/mapfiles/ms/micons/red.png' alt='marker'/>";
+            } else {
+                element.innerHTML = "<img src='http://maps.google.com/mapfiles/ms/micons/blue.png' alt='marker'/>";
+            }
+
+            var pos = fromLonLat([user.location.coordinates.longitude, user.location.coordinates.latitude]);
+            marker = new Overlay({
+                position: pos,
+                positioning: 'center-center',
+                element: element,
+                stopEvent: false
+            });
+            markers.push(marker);
+            this.olmap.addOverlay(marker);
         });
-        this.olmap.addOverlay(marker);
+
         return (
             <div id="map" style={{ width: "100%", height: "100vh" }}>
-                <div id="marker" title="Marker" style={{
-                        width: "20px",
-                        height: "20px",
-                        border: "1px solid #088",
-                        borderRadius: "10px",
-                        backgroundColor: "#0FF",
-                        opacity: "0.5",
-                    }}>
-                        
-                    </div>
+
             </div>
         );
     }

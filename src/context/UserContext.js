@@ -20,6 +20,11 @@ function userReducer(state, action) {
         ...state,
         selectedUser: action.payload.selectedUser
       };
+    case "ACTIVE_USER":
+      return {
+        ...state,
+        activeUser: action.payload.activeUser
+      };
     case "RESET_SELECTED_USER":
       return {
         ...state,
@@ -37,6 +42,7 @@ function UserProvider({ children }) {
     usersRawList: null,
     usersList: null,
     selectedUser: null,
+    activeUser: null,
   });
 
   return (
@@ -75,6 +81,7 @@ export {
   setUsersRawList,
   setUsersList,
   setSelectedUser,
+  setActiveUser,
   resetSelectedUser
 };
 
@@ -97,6 +104,13 @@ function setUsersList(dispatch, data) {
 function setSelectedUser(dispatch, data) {
   dispatch({
     type: "SELECTED_USER",
+    payload: data
+  });
+}
+
+function setActiveUser(dispatch, data) {
+  dispatch({
+    type: "ACTIVE_USER",
     payload: data
   });
 }

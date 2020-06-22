@@ -12,7 +12,7 @@ import UserCard from "../UserCard/UserCard";
  */
 export default function UsersList(props) {
   // props
-  const { data, onDeleteUser, onEditUser } = props;
+  const { data, onDeleteUser, onEditUser, onMouseOver, onMouseOut, onCardClick } = props;
 
   // styles
   const classes = useStyles();
@@ -25,6 +25,9 @@ export default function UsersList(props) {
             userData={user}
             onDeleteUser={user => onDeleteUser(user)}
             onEditUser={user => onEditUser(user)}
+            onMouseOver={user => onMouseOver(user)}
+            onMouseOut={user => onMouseOut(user)}
+            onCardClick={user => onCardClick(user)}
           />
         </Grid>
       )}
@@ -37,10 +40,16 @@ UsersList.propTypes = {
   data: PropTypes.array,
   onDeleteUser: PropTypes.func,
   onEditUser: PropTypes.func,
+  onMouseOver: PropTypes.func,
+  onMouseOut: PropTypes.func,
+  onCardClick: PropTypes.func
 };
 
 UsersList.defaultProps = {
   data: [],
   onDeleteUser: () => { },
-  onEditUser:  () => { },
+  onEditUser: () => { },
+  onMouseOver: () => { },
+  onMouseOut: () => { },
+  onCardClick: () => { }
 };

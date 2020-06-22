@@ -19,7 +19,8 @@ import {
   useUserState,
   useUserDispatch,
   setUsersRawList,
-  setSelectedUser
+  setSelectedUser,
+  setActiveUser
 } from "../../context/UserContext";
 
 function App() {
@@ -73,17 +74,31 @@ function App() {
     setOpenEdit(false);
   }
 
-  
+  const handleCardClick = (user) => {
+    console.log("CLICK");
+    setActiveUser(userDispatch, { activeUser: user });
+  }
+
+  // const handleMouseOver = (user) => {
+  //   console.log("OVER");
+  //   setActiveUser(userDispatch, { activeUser: user });
+  // }
+  // const handleMouseOut = (user) => {
+  //   console.log("OUT");
+  //   setActiveUser(userDispatch, { activeUser: null });
+  // }
+
+
   return (
     <>
       {/* USER EDIT MODAL */}
       {userState.selectedUser !== null &&
-      <EditUserModal
-        open={openEdit}
-        onClose={() => handleEditModalClose()}
-        userUUID={userState.selectedUser.login.uuid}
-      />
-      } 
+        <EditUserModal
+          open={openEdit}
+          onClose={() => handleEditModalClose()}
+          userUUID={userState.selectedUser.login.uuid}
+        />
+      }
       {/* MAIN GRID - 2 PANELS */}
       <Grid container spacing={0}>
 
@@ -95,6 +110,7 @@ function App() {
                 data={userState.usersRawList}
                 onDeleteUser={(user) => deleteUser(user)}
                 onEditUser={(user) => editUser(user)}
+                onCardClick={user => handleCardClick(user)}
               />)
               :
               (<Loading />)
@@ -105,7 +121,11 @@ function App() {
         {/* RIGHT PANEL - MAP */}
         <Grid item xs={6}>
           <Paper className={classes.right} square>
-            <OLMap />
+            {userState.usersRawList !== null ?
+              (<OLMap users={userState.usersRawList} activeUser={userState.activeUser} center={userState.activeUser !== null ? [userState.activeUser.location.coordinates.longitude, userState.activeUser.location.coordinates.latitude] : [0,0]}/>)
+              :
+              (<Loading />)
+            }
           </Paper>
         </Grid>
       </Grid>
