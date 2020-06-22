@@ -14,6 +14,7 @@ import {
     defaults as DefaultControls
 } from 'ol/control'
 import Overlay from 'ol/Overlay';
+import {toStringXY} from 'ol/coordinate';
 
 class OLMap extends React.Component {
     constructor(props) {
@@ -29,7 +30,7 @@ class OLMap extends React.Component {
                 })
             ],
             view: new View({
-                projection: 'EPSG:3857',
+                projection: 'EPSG:4326',
                 center: this.state.center,
                 zoom: this.state.zoom
             }),
@@ -66,9 +67,9 @@ class OLMap extends React.Component {
         if (prevProps) {
             if (this.props.center[0] !== prevProps.center[0]) {
                 console.log(this.props.center);
-                this.setState( { center: this.props.center, zoom: 2 });
-                this.olmap.getView().setCenter(this.props.center);
-                this.olmap.getView().setZoom(this.state.zoom);
+                this.setState( { center: this.props.center });
+                // this.olmap.getView().setCenter(this.props.center);
+                // this.olmap.getView().setZoom(this.state.zoom);
             }
         }
     }
