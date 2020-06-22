@@ -5,30 +5,25 @@ const UserDispatchContext = React.createContext();
 
 function userReducer(state, action) {
   switch (action.type) {
-    case "STORE_TABLE_OPTIONS":
-      localStorage.setItem(
-        "companiesFilterList",
-        JSON.stringify(action.payload.companiesFilterList)
-      );
+    case "USERS_RAW_LIST":
       return {
         ...state,
-        companiesFilterList: action.payload.companiesFilterList
+        usersRawList: action.payload.usersRawList
       };
-    case "STORE_TABLE_PAGE":
-      localStorage.setItem(
-        "userPage",
-        Number(action.payload.userPage)
-      );
+    case "USERS_LIST":
       return {
         ...state,
-        userPage: Number(action.payload.userPage)
+        usersList: action.payload.usersList
       };
-
-    case "RESET_TABLE_PAGE":
-      localStorage.setItem("userPage", 0);
+    case "SELECTED_USER":
       return {
         ...state,
-        userPage: 0
+        selectedUser: action.payload.selectedUser
+      };
+    case "RESET_SELECTED_USER":
+      return {
+        ...state,
+        selectedUser: null
       };
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
@@ -39,10 +34,9 @@ function userReducer(state, action) {
 function UserProvider({ children }) {
   //console.log(JSON.parse(localStorage.getItem("companiesFilterList")));
   const [state, dispatch] = React.useReducer(userReducer, {
-    companiesFilterList: JSON.parse(
-      localStorage.getItem("companiesFilterList")
-    ),
-    userPage: localStorage.getItem("userPage")
+    usersRawList: null,
+    usersList: null,
+    selectedUser: null,
   });
 
   return (
@@ -58,7 +52,7 @@ function useUserState() {
   const context = React.useContext(UserStateContext);
   if (context === undefined) {
     throw new Error(
-      "useCompaniesState debe utilizarse dentro de un UserProvider"
+      "useUserState must be used inside a UserProvider"
     );
   }
   return context;
@@ -68,7 +62,7 @@ function useUserDispatch() {
   const context = React.useContext(UserDispatchContext);
   if (context === undefined) {
     throw new Error(
-      "useCompaniesDispatch debe utilizarse dentro de un UserProvider"
+      "useUserDispatch must be used inside a UserProvider"
     );
   }
   return context;
@@ -78,30 +72,38 @@ export {
   UserProvider,
   useUserState,
   useUserDispatch,
-  setUserFilters,
-  setUserPage,
-  resetUserPage
+  setUsersRawList,
+  setUsersList,
+  setSelectedUser,
+  resetSelectedUser
 };
 
 // ###########################################################
 
-function setUserFilters(dispatch, data) {
+function setUsersRawList(dispatch, data) {
   dispatch({
-    type: "STORE_TABLE_OPTIONS",
+    type: "USERS_RAW_LIST",
     payload: data
   });
 }
 
-function setUserPage(dispatch, data) {
+function setUsersList(dispatch, data) {
   dispatch({
-    type: "STORE_TABLE_PAGE",
+    type: "USERS_LIST",
     payload: data
   });
 }
 
-function resetUserPage(dispatch, data) {
+function setSelectedUser(dispatch, data) {
   dispatch({
-    type: "RESET_TABLE_PAGE",
+    type: "SELECTED_USER",
+    payload: data
+  });
+}
+
+function resetSelectedUser(dispatch, data) {
+  dispatch({
+    type: "RESET_SELECTED_USER",
     payload: data
   });
 }

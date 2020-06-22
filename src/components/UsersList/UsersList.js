@@ -12,7 +12,7 @@ import UserCard from "../UserCard/UserCard";
  */
 export default function UsersList(props) {
   // props
-  const { data } = props;
+  const { data, onDeleteUser, onEditUser } = props;
 
   // styles
   const classes = useStyles();
@@ -21,7 +21,11 @@ export default function UsersList(props) {
     <Grid container className={classes.root} spacing={2}>
       {data.map(user =>
         <Grid item xs={12} md={6} lg={4} key={user.login.uuid}>
-          <UserCard userData={user} />
+          <UserCard
+            userData={user}
+            onDeleteUser={user => onDeleteUser(user)}
+            onEditUser={user => onEditUser(user)}
+          />
         </Grid>
       )}
     </Grid>
@@ -31,8 +35,12 @@ export default function UsersList(props) {
 UsersList.propTypes = {
   /** User list raw data*/
   data: PropTypes.array,
+  onDeleteUser: PropTypes.func,
+  onEditUser: PropTypes.func,
 };
 
 UsersList.defaultProps = {
-  data: []
+  data: [],
+  onDeleteUser: () => { },
+  onEditUser:  () => { },
 };

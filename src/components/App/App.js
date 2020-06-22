@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
@@ -12,12 +12,20 @@ import { personas } from "../../api"
 import Loading from "../Loading";
 import UsersList from "../UsersList";
 
+// context
+import {
+  useUserState,
+  useUserDispatch,
+  setUsersRawList
+} from "../../context/UserContext";
+
 function App() {
   // styles
   const classes = useStyles();
 
-  //state
-  const [personasRaw, setPersonasRaw] = useState(null);
+  // context
+  const userState = useUserState();
+  const userDispatch = useUserDispatch();
 
   // effect
   useEffect(() => {
@@ -28,7 +36,7 @@ function App() {
         console.log(data)
         if (!data.status) {
           console.log("Personas retrieved");
-          setPersonasRaw(data.results);
+          setUsersRawList(userDispatch, { usersRawList: data.results });
         } else {
           console.log("Error retrieving personas!");
         }
@@ -36,15 +44,32 @@ function App() {
       .catch(error => {
         console.log(error);
       });
-  }, []);
+  }, [userDispatch]);
+
+  const deleteUser = (user) => {
+    console.log(user);
+    const updatedList = userState.usersRawList.filter(item =>
+      item.login.uuid !== user.login.uuid
+    )
+    setUsersRawList(userDispatch, { usersRawList: updatedList });
+
+  }
+
+  const editUser = (user) => {
+    console.log(user);
+  }
 
   return (
     <div className={classes.root}>
       <Grid container spacing={0}>
         <Grid item xs={6}>
           <Paper className={classes.left} square>
-            {personasRaw !== null ?
-              (<UsersList data={personasRaw} />)
+            {userState.usersRawList !== null ?
+              (<UsersList
+                data={userState.usersRawList}
+                onDeleteUser={(user) => deleteUser(user)}
+                onEditUser={(user) => editUser(user)}
+              />)
               :
               (<Loading />)
             }

@@ -20,7 +20,7 @@ import useStyles from "./styles";
  */
 export default function UserCard(props) {
     // props
-    const { userData } = props;
+    const { userData, onDeleteUser, onEditUser } = props;
 
     // styles
     const classes = useStyles();
@@ -46,10 +46,19 @@ export default function UserCard(props) {
                 </CardContent>
             </CardActionArea>
             <CardActions className={classes.actions}>
-                <Button variant="contained" size="small" color="primary">
+                <Button 
+                    variant="contained" 
+                    size="small" 
+                    color="primary"
+                    onClick={() => onEditUser(userData)}
+                >
                     Edit
                 </Button>
-                <Button variant="contained" size="small" color="error">
+                <Button 
+                    variant="contained" 
+                    size="small"  
+                    onClick={() => onDeleteUser(userData)}
+                >
                     Delete
                 </Button>
             </CardActions>
@@ -59,10 +68,15 @@ export default function UserCard(props) {
 
 UserCard.propTypes = {
     /** User information to build the card  */
-    userData: PropTypes.object.isRequired,
-
+    userData: PropTypes.object,
+    /** Callback function for deleting user */
+    onDeleteUser: PropTypes.func,
+    /** Callback function for editing user */
+    onEditUser: PropTypes.func
 };
 
 UserCard.defaultProps = {
-    userData: {}
+    userData: {},
+    onDeleteUser: () => {},
+    onEditUser: () => {}
 };
