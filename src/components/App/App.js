@@ -12,6 +12,7 @@ import { personas } from "../../api"
 import Loading from "../Loading";
 import UsersList from "../UsersList";
 import EditUserModal from "../EditUserModal";
+import OLMap from "../OLMap";
 
 // context
 import {
@@ -104,7 +105,7 @@ function App() {
         {/* RIGHT PANEL - MAP */}
         <Grid item xs={6}>
           <Paper className={classes.right} square>
-
+            <OLMap />
           </Paper>
         </Grid>
       </Grid>
