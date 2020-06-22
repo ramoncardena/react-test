@@ -6,29 +6,29 @@ import Grid from '@material-ui/core/Grid';
 import useStyles from "./styles";
 
 //api
-import {personas} from "../../api"
+import { personas } from "../../api"
 
 // components
 import Loading from "../Loading";
 import UsersList from "../UsersList";
 
 function App() {
-   // styles
-   const classes = useStyles();
+  // styles
+  const classes = useStyles();
 
-   //state
-   const [personasRaw, setPersonasRaw] = useState(null);
+  //state
+  const [personasRaw, setPersonasRaw] = useState(null);
 
-   // effect
-   useEffect(() => {
+  // effect
+  useEffect(() => {
     personas
       .retrieve(50)
       .then(response => response.json())
       .then(data => {
         console.log(data)
         if (!data.status) {
-            console.log("Personas retrieved");
-            setPersonasRaw(!data.results);
+          console.log("Personas retrieved");
+          setPersonasRaw(data.results);
         } else {
           console.log("Error retrieving personas!");
         }
@@ -40,23 +40,23 @@ function App() {
 
   return (
     <div className={classes.root}>
-    <Grid container spacing={0}>
-      <Grid item xs={6}>
-        <Paper className={classes.left} square>
-        {personasRaw !== null ? 
-          (<UsersList/>)
-          :
-          (<Loading/>)
-        }
-        </Paper>
+      <Grid container spacing={0}>
+        <Grid item xs={6}>
+          <Paper className={classes.left} square>
+            {personasRaw !== null ?
+              (<UsersList data={personasRaw} />)
+              :
+              (<Loading />)
+            }
+          </Paper>
+        </Grid>
+        <Grid item xs={6}>
+          <Paper className={classes.right} square>
+
+          </Paper>
+        </Grid>
       </Grid>
-      <Grid item xs={6}>
-        <Paper className={classes.right} square>
-        
-        </Paper>
-      </Grid>
-    </Grid>
-  </div>
+    </div>
   );
 }
 

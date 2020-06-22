@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Paper } from "@material-ui/core";
-
+import Grid from '@material-ui/core/Grid';
 
 // hooks
 import useStyles from "./styles";
+import UserCard from "../UserCard/UserCard";
 
 /**
  * @version 1.0.0
@@ -12,21 +12,27 @@ import useStyles from "./styles";
  */
 export default function UsersList(props) {
   // props
-  const { users } = props;
+  const { data } = props;
 
   // styles
   const classes = useStyles();
 
   return (
-   <Paper>Users List</Paper>
+    <Grid container className={classes.root} spacing={2}>
+      {data.map(user =>
+        <Grid item xs={12} md={6} lg={4} key={user.login.uuid}>
+          <UserCard userData={user} />
+        </Grid>
+      )}
+    </Grid>
   );
 }
 
 UsersList.propTypes = {
-  /** Unidades a mostrar después de la cantidad (por defecto: M)*/
-  users: PropTypes.object,
+  /** User list raw data*/
+  data: PropTypes.array,
 };
 
 UsersList.defaultProps = {
-  users: {}
+  data: []
 };
